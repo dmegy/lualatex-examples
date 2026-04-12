@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage[paperwidth=20cm, paperheight=20cm]{geometry}
+\usepackage{luacode}
+\begin{document}
+\pagestyle{empty}
+\leavevmode
+\begin{luacode*}
+start=os.clock()
+local CM_PER_PIXEL  = .005
+local PT_PER_PIXEL= CM_PER_PIXEL * 72 / 2.54
+local N = 4000
+
+local function draw_pixel(x,y)
+	local scale = 4 -- grossissement sur les pixels
+    local px = x * PT_PER_PIXEL
+    local py = y * PT_PER_PIXEL
+    return string.format("%.2f %.2f %.2f %.2f re f",
+          px, py, PT_PER_PIXEL*scale, PT_PER_PIXEL*scale)
+end
+
+
+local squares = {}
+local max = math.floor(math.sqrt(2*N*N))
+for i = 1, max do
+  squares[i*i] = true
+end
+
+local out = {}
+
+for x = 1, N do
+  for y = 1, x do
+    local s = x*x + y*y
+    if squares[s] then
+      table.insert(out,draw_pixel(x,y))
+      table.insert(out,draw_pixel(y,x))
+    end
+  end
+end
+
+checkpoint = os.clock()
+texio.write_nl("\n=====> Triplets calculés et commandes insérés dans la table  en " .. (os.clock() - checkpoint) .. "s.")
+
+
+tex.sprint("\\pdfextension literal direct {0 0 0 rg ")
+tex.sprint(table.concat(out, "\n"))
+tex.sprint("}")
+\end{luacode*}
+
+
+\directlua{texio.write_nl("=====> Arrivée à la fin du document en : " .. (os.clock() - checkpoint) .. "s.");checkpoint = os.clock()}
+\directlua{texio.write_nl("=====> Temps total écoulé : " .. (os.clock() - start) .. "s.")}
+\end{document}

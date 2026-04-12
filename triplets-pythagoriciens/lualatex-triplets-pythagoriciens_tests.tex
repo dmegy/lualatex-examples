@@ -1,0 +1,48 @@
+\documentclass[tikz]{standalone}
+\usepackage{luacode}
+\begin{document}
+\begin{tikzpicture}
+\begin{luacode*}
+clock = os.clock()
+function log_checkpoint(message)
+	local new_clock = os.clock()
+	texio.write_nl("=====>" ..message .. " en " .. (new_clock - clock) .. " secondes")
+	clock = new_clock
+end
+
+local N = 4000
+local M = 3000
+local scale = 0.004
+local POINT_RADIUS = 0.025
+
+local function is_square(n)
+  local r = math.sqrt(n)
+  if r ~= math.floor(r) then return false end
+  return true
+end
+
+local function draw_point(x,y)
+  return string.format(
+    "\\fill[black] (%.4f,%.4f) circle (%.4f);",
+    x,y,POINT_RADIUS
+  )
+end
+
+local linesToPrint = {}
+
+for x = 1, M do
+  for y = 1, N do
+    if is_square(x*x + y*y) then
+      table.insert(linesToPrint, draw_point(x*scale, y*scale))
+    end
+  end
+end
+
+log_checkpoint("fin du calcul des triplets et insertion dans la liste des lignes")
+
+tex.print(table.concat(linesToPrint," "))
+\end{luacode*}
+\end{tikzpicture}
+
+\directlua{log_checkpoint("Fin de la figure Tikz")}
+\end{document}

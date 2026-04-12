@@ -1,0 +1,23 @@
+\documentclass{standalone}
+\usepackage{luacode}
+\usepackage{pst-all}
+\begin{document}
+
+\begin{luacode*}
+dofile("E8.lua")
+scale=4
+clip=2.5
+tex.print(string.format("\\begin{pspicture}(-%d,-%d)(%d,%d)", clip*scale,clip*scale,clip*scale,clip*scale))
+for i=1,#edges do
+	tex.print(string.format(
+		"\\psline[%s](%f,%f)(%f,%f)",
+		"linewidth=.1pt",
+		scale*roots_projections[edges[i][1]][1],
+		scale*roots_projections[edges[i][1]][2],
+		scale*roots_projections[edges[i][2]][1],
+		scale*roots_projections[edges[i][2]][2]
+	))
+end
+tex.print("\\end{pspicture}")
+\end{luacode*}
+\end{document}

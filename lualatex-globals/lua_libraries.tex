@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{tikz,verbatim,luacode,animate}
+\begin{document}
+\title{Objets globaux en lualatex}
+\maketitle
+
+\section{Fonctions globales}
+
+\begin{luacode*}
+  globalkeys = {}
+  for k, v in pairs(_G) do
+      table.insert(globalkeys, k)
+  end
+  table.sort(globalkeys)
+\end{luacode*}
+
+
+\directlua{
+  for _,j in ipairs(globalkeys) do
+    local v = _G[j]
+    if type(v) == "function" then tex.print("\\detokenize{" .. j .. "}, ") end
+  end
+}
+
+\section{Modules / tables : liste rapide}
+
+\directlua{
+  for _,j in ipairs(globalkeys) do
+    local v = _G[j]
+    if type(v) == "table" then tex.print("\\detokenize{" .. j .. "}, ") end
+  end
+}
+
+
+    
+    \section{Modules / tables : contenu des tables}
+
+\directlua{
+  for j,v in pairs(_G) do
+    if type(v) == "table" then
+	    tex.print("\\subsection{\\detokenize{" .. j .. "}}")
+	    for x, y in pairs(v) do
+	        tex.sprint(-2,
+	          tostring(x) .. " (" .. type(y).."), "
+	        )
+	    end
+    end
+  end
+}
+
+
+\end{document}

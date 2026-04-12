@@ -1,0 +1,24 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{document}
+
+\begin{luacode*}
+dofile("E8.lua")
+clip=2.5
+scale=4
+tex.print(string.format("\\begin{tikzpicture}[scale=%f]",scale))
+tex.print(string.format("\\clip (%f,%f) rectangle (%f,%f);", -clip,-clip,clip,clip))
+for i=1,#edges do
+	tex.print(string.format(
+		"\\draw[%s] (%f,%f) -- (%f,%f);",
+		"line width=.1pt",
+		roots_projections[edges[i][1]][1],
+		roots_projections[edges[i][1]][2],
+		roots_projections[edges[i][2]][1],
+		roots_projections[edges[i][2]][2]
+	))
+end
+tex.print("\\end{tikzpicture}")
+\end{luacode*}
+
+\end{document}

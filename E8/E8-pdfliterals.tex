@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage[margin=0cm,paperwidth=20cm,paperheight=20cm]{geometry}
+\usepackage{luacode}
+\begin{document}
+\leavevmode
+\begin{luacode*}
+dofile("E8.lua")
+clip=2.5
+scale=4
+pt_per_cm = 28.35
+for i=1,#edges do
+	tex.print(string.format(
+		"\\pdfextension literal direct {0 0 0 rg 0.1 w %f %f m %f %f l S}",
+		scale*pt_per_cm*(clip+roots_projections[edges[i][1]][1]),
+		scale*pt_per_cm*(clip+roots_projections[edges[i][1]][2]),
+		scale*pt_per_cm*(clip+roots_projections[edges[i][2]][1]),
+		scale*pt_per_cm*(clip+roots_projections[edges[i][2]][2])
+	))
+end
+\end{luacode*}
+
+\end{document}
