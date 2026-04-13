@@ -1,0 +1,39 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{luacode*}
+a=1/3
+b=2/3 -- essayer avec d'autres valeurs pour une version déformée
+
+function fillSquare(O,I,J)
+	tex.print(
+		string.format(
+			"\\fill[black] (%f,%f) rectangle (%f,%f);",
+			O[1], O[2],
+			I[1], J[2]
+		)
+	)
+end
+
+
+function P(O,I,J,x,y)
+	-- point de coord. (x,y) dans le repère (O,I,J)
+	return {O[1]+x*(I[1]-O[1]),O[2]+y*(J[2]-O[2])}
+end
+
+function sierpinski(O,I,J,depth)
+	if depth == 0 then
+		fillSquare(O,I,J)
+	else
+		sierpinski(P(O,I,J,0,0), P(O,I,J,a,0), P(O,I,J,0,a), depth-1)
+		sierpinski(P(O,I,J,0,b), P(O,I,J,a,b), P(O,I,J,0,1), depth-1)
+		sierpinski(P(O,I,J,a,a), P(O,I,J,b,a), P(O,I,J,a,b), depth-1)
+		sierpinski(P(O,I,J,b,0), P(O,I,J,1,0), P(O,I,J,b,a), depth-1)
+		sierpinski(P(O,I,J,b,b), P(O,I,J,1,b), P(O,I,J,1,1), depth-1)
+	end
+end
+\end{luacode*}
+\begin{document}
+\begin{tikzpicture}[scale=12]
+\directlua{sierpinski({0,0}, {1,0}, {0,1}, 5)}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,41 @@
+\documentclass[tikz,multi,margin=.5cm]{standalone}
+%\usepackage{tikz}
+\usepackage{luacode}
+
+\begin{luacode*}
+function lerp(P,Q,t)
+	return {P[1]*(1-t) + Q[1] * t, P[2]*(1-t) + Q[2] * t}
+end
+
+function drawLine(P,Q,R)
+	tex.print(
+		string.format(
+			"\\draw[%s] (%f,%f) .. controls (%f,%f) and (%f,%f) .. (%f,%f);",
+			"very thick, line cap=round, black",
+			P[1], P[2],
+			R[1], R[2],
+			R[1], R[2],
+			Q[1], Q[2]
+		)
+	)
+end
+
+function sierpinski_arrowhead(P,Q,R,n)
+	if n == 1 then
+		drawLine(P,Q,R)
+	else
+		sierpinski_arrowhead(lerp(P,R,1/2), P, lerp(P,Q,1/2), n-1)
+		sierpinski_arrowhead(lerp(P,R,1/2), lerp(Q,R,1/2), R, n-1)
+		sierpinski_arrowhead(Q, lerp(R,Q,1/2), lerp(P,Q,1/2), n-1)
+	end
+end
+
+\end{luacode*}
+
+\begin{document}
+\begin{tikzpicture}[scale=12]
+\directlua{sierpinski_arrowhead({0,0}, {1,0}, {1/2,math.sqrt(3)/2}, 6)}
+\draw (0,0) node {$\bullet$};
+\draw (1,0) node {$\bullet$};
+\end{tikzpicture}
+\end{document}

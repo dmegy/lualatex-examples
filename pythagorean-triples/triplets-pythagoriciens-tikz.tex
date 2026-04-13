@@ -1,0 +1,39 @@
+\documentclass[tikz]{standalone}
+\pagestyle{empty}
+\usepackage{tikz}
+\usepackage{luacode}
+\begin{document}
+\begin{tikzpicture}
+\begin{luacode*}
+local N = 4000
+local scale = 0.005
+local PIXEL_SIZE = 0.02
+local squares = {}
+local max = math.floor(math.sqrt(2* N*N))
+for i = 1,max  do
+  squares[i*i] = true
+end
+
+local function draw_point(x,y)
+	return string.format(
+        "\\fill[black] (%.3f,%.3f) rectangle (%.3f,%.3f);",
+        x,y,x+PIXEL_SIZE,y+PIXEL_SIZE
+      )
+end
+
+local lines = {}
+
+for x = 1, N do
+  for y = 1, x do
+    local s = x*x + y*y
+    if squares[s] then
+    	table.insert(lines,draw_point(x*scale,y*scale))
+    	table.insert(lines,draw_point(y*scale,x*scale))
+    end
+  end
+end
+
+tex.print(table.concat(lines,"\n"))
+\end{luacode*}
+\end{tikzpicture}
+\end{document}

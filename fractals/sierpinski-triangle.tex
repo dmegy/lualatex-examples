@@ -1,0 +1,34 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{luacode*}
+-- barycenter of two points / "lerp"
+function lerp(P,Q,t)
+	return {P[1]*(1-t) + Q[1] * t, P[2]*(1-t) + Q[2] * t}
+end
+
+function fillTriangle(P,Q,R)
+	tex.print(
+		string.format(
+			"\\fill[black] (%f,%f) -- (%f,%f) -- (%f,%f) -- cycle;",
+			P[1], P[2],
+			Q[1], Q[2],
+			R[1], R[2]
+		)
+	)
+end
+
+function sierpinski(P,Q,R,depth)
+	if depth == 0 then
+		fillTriangle(P,Q,R)
+	else
+		sierpinski(P, lerp(P,Q,1/2), lerp(P,R,1/2), depth-1)
+		sierpinski(lerp(Q,P,1/2), Q, lerp(Q,R,1/2), depth-1)
+		sierpinski(lerp(R,P,1/2), lerp(R,Q,1/2), R, depth-1)
+	end
+end
+\end{luacode*}
+\begin{document}
+\begin{tikzpicture}[scale=12]
+\directlua{sierpinski({0,0}, {1,0}, {1/2,math.sqrt(3)/2}, 7)}
+\end{tikzpicture}
+\end{document}

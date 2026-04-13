@@ -5,7 +5,6 @@
 \pagestyle{empty}
 \leavevmode
 \begin{luacode*}
-start=os.clock()
 local CM_PER_PIXEL  = .005
 local PT_PER_PIXEL= CM_PER_PIXEL * 72 / 2.54
 local N = 4000
@@ -37,16 +36,8 @@ for x = 1, N do
   end
 end
 
-checkpoint = os.clock()
-texio.write_nl("\n=====> Triplets calculés et commandes insérés dans la table  en " .. (os.clock() - checkpoint) .. "s.")
-
-
 tex.sprint("\\pdfextension literal direct {0 0 0 rg ")
 tex.sprint(table.concat(out, "\n"))
 tex.sprint("}")
 \end{luacode*}
-
-
-\directlua{texio.write_nl("=====> Arrivée à la fin du document en : " .. (os.clock() - checkpoint) .. "s.");checkpoint = os.clock()}
-\directlua{texio.write_nl("=====> Temps total écoulé : " .. (os.clock() - start) .. "s.")}
 \end{document}
