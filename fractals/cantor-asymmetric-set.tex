@@ -1,0 +1,36 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{luacode*}
+HEIGHT=.01
+OFFSET_Y=0
+a=1/4
+b=1/2
+
+function drawSegment(x,y)
+	tex.print(string.format(
+		"\\fill[black] (%f,%f) rectangle (%f,%f);",
+		x, OFFSET_Y,
+		y, OFFSET_Y + HEIGHT
+	))
+end
+
+function cantor(x,y,n)
+	if n == 0 then
+		drawSegment(x,y)
+	else
+		cantor(x, x+(y-x)*a, n-1)
+		cantor(x+(y-x)*b, y, n-1)
+	end
+end
+
+\end{luacode*}
+\begin{document}
+\begin{tikzpicture}[scale=16]
+\begin{luacode*}
+for k=0,6 do
+cantor(0,1, k)
+OFFSET_Y =  OFFSET_Y + 2*HEIGHT
+end
+\end{luacode*}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,36 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{luacode*}
+
+
+function fillSquare(origin,size)
+	tex.print(
+		string.format(
+			"\\fill[white] (%f,%f) rectangle (%f,%f);",
+			origin[1], origin[2],
+			origin[1]+size, origin[2]+size
+		)
+	)
+end
+
+function sierpinski_carpet(P,size,depth)
+	size = size/3
+	depth = depth-1
+	fillSquare({P[1]+size,P[2]+size},size)
+	if depth <= 0 then return end
+	
+	for i=0,2 do
+		for j=0,2 do
+			if i ~=1 or j ~=1 then
+				sierpinski_carpet({P[1]+i*size,P[2]+j*size},size,depth)
+			end
+		end
+	end
+end
+\end{luacode*}
+\begin{document}
+\begin{tikzpicture}[scale=12]
+\fill[black] (0,0) rectangle (1,1);
+\directlua{sierpinski_carpet({0,0}, 1, 5)}
+\end{tikzpicture}
+\end{document}

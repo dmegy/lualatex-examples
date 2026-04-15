@@ -1,7 +1,7 @@
 \documentclass[tikz,multi]{standalone}
 \usepackage{luacode}
 \begin{luacode*}
-HEIGHT=.05
+HEIGHT=.01
 OFFSET_Y=0
 
 function drawSegment(x,y)
@@ -23,11 +23,11 @@ end
 
 \end{luacode*}
 \begin{document}
-\begin{tikzpicture}[scale=12]
+\begin{tikzpicture}[scale=16]
 \begin{luacode*}
 for k=0,6 do
 cantor(0,1, k)
-OFFSET_Y =  OFFSET_Y + HEIGHT
+OFFSET_Y =  OFFSET_Y + 2*HEIGHT
 end
 \end{luacode*}
 \end{tikzpicture}

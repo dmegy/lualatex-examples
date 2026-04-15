@@ -1,0 +1,41 @@
+\documentclass[tikz,multi]{standalone}
+\usepackage{luacode}
+\begin{luacode*}
+-- ===== CANTOR-SMITH-VOLTERRA SET ======
+-- has Lebesgue measure 1/2
+-- ======================================
+
+HEIGHT=.01
+OFFSET_Y=0
+
+function drawSegment(x,y)
+	tex.print(string.format(
+		"\\fill[black] (%f,%f) rectangle (%f,%f);",
+		x, OFFSET_Y,
+		y, OFFSET_Y + HEIGHT
+	))
+end
+
+function cantor_smith_volterra(x,y,depth,codepth)
+	if depth == 0 then
+		drawSegment(x,y)
+	else
+		local a = (x+y)/2 - (y-x)/2^(2*codepth+3)
+		local b = (x+y)/2 + (y-x)/2^(2*codepth+3)
+		cantor_smith_volterra(x, a, depth-1, codepth+1)
+		cantor_smith_volterra(b, y, depth-1, codepth+1)
+		texio.write_nl(x)
+	end
+end
+
+\end{luacode*}
+\begin{document}
+\begin{tikzpicture}[scale=16]
+\begin{luacode*}
+for k=0,4 do
+	cantor_smith_volterra(0, 1, k, 0)
+	OFFSET_Y = OFFSET_Y + 2*HEIGHT
+end
+\end{luacode*}
+\end{tikzpicture}
+\end{document}
