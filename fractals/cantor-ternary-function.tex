@@ -25,9 +25,12 @@ end
 
 \end{luacode*}
 \begin{document}
-\begin{tikzpicture}[scale=16]
+
 \begin{luacode*}
-cantor_graph({0,0},{1,1},5)
+for k=0,7 do
+	tex.print("\\begin{tikzpicture}[scale=16]")
+	cantor_graph({0,0},{1,1},k)
+	tex.print("\\end{tikzpicture}")
+end
 \end{luacode*}
-\end{tikzpicture}
 \end{document}
